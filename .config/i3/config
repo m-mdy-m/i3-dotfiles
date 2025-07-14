@@ -35,14 +35,13 @@ smart_borders on
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id nm-applet
-exec --no-startup-id setxkbmap -layout us -variant altgr-intl
+exec_always --no-startup-id setxkbmap -layout us,ir -option grp:alt_shift_toggle
 exec --no-startup-id xset r rate 200 30
 
 # Background with blur effect
-exec --no-startup-id feh --bg-scale ~/Pictures/1.jpg
-exec --no-startup-id picom --config ~/.config/picom/picom.conf
+# exec --no-startup-id picom --config ~/.config/picom/picom.conf
 
-# Volume controls with notification
+# xVolume controls with notification
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && $refresh_i3status
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% && $refresh_i3status
@@ -62,18 +61,6 @@ bindsym $mod+Shift+q kill
 bindsym $mod+d exec rofi -show drun
 bindsym $mod+Shift+d exec rofi -show run
 bindsym $mod+Tab exec rofi -show window
-
-# Screenshots
-bindsym Print exec --no-startup-id scrot '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/ && notify-send "Screenshot saved"'
-bindsym $mod+Print exec --no-startup-id scrot -u '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/ && notify-send "Window screenshot saved"'
-bindsym $mod+Shift+Print exec --no-startup-id scrot -s '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/ && notify-send "Area screenshot saved"'
-
-# Lock screen with blur
-bindsym $mod+Shift+x exec i3lock -i ~/Pictures/1.jpg --blur 5
-
-# Background switcher
-bindsym $mod+b exec --no-startup-id feh --bg-scale ~/Pictures/1.jpg
-bindsym $mod+Shift+b exec --no-startup-id feh --bg-scale ~/Pictures/2.jpg
 
 # Focus movement (vim-like)
 bindsym $mod+h focus left
