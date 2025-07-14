@@ -1,0 +1,182 @@
+/*
+ * Rofi Dark Theme Configuration
+ * Minimal and beautiful launcher theme
+ */
+
+configuration {
+    display-drun: "Applications";
+    display-run: "Run";
+    display-window: "Windows";
+    show-icons: true;
+    icon-theme: "Papirus-Dark";
+    font: "JetBrains Mono 12";
+    modi: "drun,run,window";
+    kb-row-up: "Up,Control+k";
+    kb-row-down: "Down,Control+j";
+    kb-accept-entry: "Control+m,Return,KP_Enter";
+    kb-remove-to-eol: "Control+Shift+e";
+    kb-mode-next: "Shift+Right,Control+Tab";
+    kb-mode-previous: "Shift+Left,Control+Shift+Tab";
+    kb-row-left: "Control+Page_Up";
+    kb-row-right: "Control+Page_Down";
+}
+
+* {
+    background-color: #2f343f;
+    text-color: #f3f4f5;
+    selbg: #4a9eff;
+    actbg: #262626;
+    urgbg: #e53e3e;
+    winbg: #2f343f;
+
+    selected-normal-foreground: #2f343f;
+    selected-normal-background: #4a9eff;
+    selected-active-foreground: #2f343f;
+    selected-active-background: #4a9eff;
+    selected-urgent-foreground: #2f343f;
+    selected-urgent-background: #e53e3e;
+
+    normal-foreground: #f3f4f5;
+    normal-background: #2f343f;
+    active-foreground: #4a9eff;
+    active-background: #2f343f;
+    urgent-foreground: #e53e3e;
+    urgent-background: #2f343f;
+
+    alternate-normal-foreground: #f3f4f5;
+    alternate-normal-background: #2f343f;
+    alternate-active-foreground: #4a9eff;
+    alternate-active-background: #2f343f;
+    alternate-urgent-foreground: #e53e3e;
+    alternate-urgent-background: #2f343f;
+
+    border-color: #4a9eff;
+    spacing: 2;
+}
+
+window {
+    background-color: #2f343f;
+    border: 1;
+    border-radius: 6;
+    border-color: #4a9eff;
+    padding: 15;
+    width: 45%;
+    location: center;
+    anchor: center;
+}
+
+mainbox {
+    border: 0;
+    padding: 0;
+}
+
+message {
+    border: 2px 0 0;
+    border-color: #4a9eff;
+    padding: 1px;
+}
+
+textbox {
+    highlight: #4a9eff;
+    text-color: #f3f4f5;
+}
+
+listview {
+    border: 2px solid 0 0;
+    padding: 2px 0 0;
+    border-color: #4a9eff;
+    spacing: 2px;
+    scrollbar: false;
+    fixed-height: 0;
+}
+
+element {
+    border: 0;
+    padding: 8px;
+    border-radius: 4;
+}
+
+element.normal.normal {
+    background-color: #2f343f;
+    text-color: #f3f4f5;
+}
+
+element.normal.urgent {
+    background-color: #2f343f;
+    text-color: #e53e3e;
+}
+
+element.normal.active {
+    background-color: #2f343f;
+    text-color: #4a9eff;
+}
+
+element.selected.normal {
+    background-color: #4a9eff;
+    text-color: #2f343f;
+}
+
+element.selected.urgent {
+    background-color: #e53e3e;
+    text-color: #2f343f;
+}
+
+element.selected.active {
+    background-color: #4a9eff;
+    text-color: #2f343f;
+}
+
+element.alternate.normal {
+    background-color: #2f343f;
+    text-color: #f3f4f5;
+}
+
+element.alternate.urgent {
+    background-color: #2f343f;
+    text-color: #e53e3e;
+}
+
+element.alternate.active {
+    background-color: #2f343f;
+    text-color: #4a9eff;
+}
+
+scrollbar {
+    width: 4px;
+    border: 0;
+    handle-color: #4a9eff;
+    handle-width: 8px;
+    padding: 0;
+}
+
+sidebar {
+    border: 2px 0 0;
+    border-color: #4a9eff;
+}
+
+inputbar {
+    spacing: 0;
+    text-color: #f3f4f5;
+    padding: 2px;
+    children: [ prompt, textbox-prompt-sep, entry, case-indicator ];
+}
+
+case-indicator,
+entry,
+prompt,
+button {
+    spacing: 0;
+    text-color: #f3f4f5;
+}
+
+button.selected {
+    background-color: #4a9eff;
+    text-color: #2f343f;
+}
+
+textbox-prompt-sep {
+    expand: false;
+    str: ":";
+    text-color: #f3f4f5;
+    margin: 0 0.3em 0 0;
+}
