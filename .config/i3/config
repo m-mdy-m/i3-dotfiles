@@ -1,34 +1,36 @@
 # i3 config file (v4)
-# Minimal, Beautiful, Dark Theme Configuration for Void Linux
+# Modern, Clean, Minimal Configuration
 
 # Set modifier key to Super (Windows key)
 set $mod Mod4
 
 # Font for window titles and bar
-font pango:JetBrains Mono 10
+font pango:JetBrains Mono Medium 10
 
-# Color scheme - Dark theme with blue accents
-set $bg-color            #2f343f
-set $inactive-bg-color   #2f343f
-set $text-color          #f3f4f5
-set $inactive-text-color #676e7d
-set $urgent-bg-color     #e53e3e
-set $accent-color        #4a9eff
-set $border-color        #4a9eff
-set $inactive-border     #2f343f
+# Modern color palette - Dark theme with subtle accents
+set $bg-color            #1a1b26
+set $inactive-bg-color   #16161e
+set $text-color          #c0caf5
+set $inactive-text-color #565f89
+set $urgent-bg-color     #f7768e
+set $accent-color        #7aa2f7
+set $border-color        #3b4261
+set $active-border       #7aa2f7
+set $warning-color       #ff9e64
 
 # Window colors
 #                       border              background         text                 indicator
-client.focused          $border-color       $bg-color          $text-color          $accent-color
-client.unfocused        $inactive-border    $inactive-bg-color $inactive-text-color $inactive-border
-client.focused_inactive $inactive-border    $inactive-bg-color $inactive-text-color $inactive-border
+client.focused          $active-border      $bg-color          $text-color          $accent-color
+client.unfocused        $border-color       $inactive-bg-color $inactive-text-color $border-color
+client.focused_inactive $border-color       $inactive-bg-color $inactive-text-color $border-color
 client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color          $urgent-bg-color
 
-# Window borders
-for_window [class=".*"] border pixel 2
-gaps inner 8
-gaps outer 4
-
+# Window styling
+for_window [class=".*"] border pixel 1
+gaps inner 10
+gaps outer 6
+smart_gaps on
+smart_borders on
 # Autostart applications
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
@@ -36,7 +38,11 @@ exec --no-startup-id nm-applet
 exec --no-startup-id setxkbmap -layout us -variant altgr-intl
 exec --no-startup-id xset r rate 200 30
 
-# Volume controls
+# Background with blur effect
+exec --no-startup-id feh --bg-scale ~/Pictures/1.jpg
+exec --no-startup-id picom --config ~/.config/picom/picom.conf
+
+# Volume controls with notification
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && $refresh_i3status
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% && $refresh_i3status
@@ -51,42 +57,47 @@ bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 10
 floating_modifier $mod
 
 # Key bindings
-bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec alacritty
 bindsym $mod+Shift+q kill
-bindsym $mod+d exec rofi -show drun -theme ~/.config/rofi/config.rasi
-bindsym $mod+Shift+d exec rofi -show run -theme ~/.config/rofi/config.rasi
-bindsym $mod+Tab exec rofi -show window -theme ~/.config/rofi/config.rasi
+bindsym $mod+d exec rofi -show drun
+bindsym $mod+Shift+d exec rofi -show run
+bindsym $mod+Tab exec rofi -show window
 
-# Screenshot
-bindsym Print exec --no-startup-id scrot '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/'
-bindsym $mod+Print exec --no-startup-id scrot -u '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/'
+# Screenshots
+bindsym Print exec --no-startup-id scrot '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/ && notify-send "Screenshot saved"'
+bindsym $mod+Print exec --no-startup-id scrot -u '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/ && notify-send "Window screenshot saved"'
+bindsym $mod+Shift+Print exec --no-startup-id scrot -s '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/ && notify-send "Area screenshot saved"'
 
-# Lock screen
-bindsym $mod+Shift+x exec i3lock -c 000000
+# Lock screen with blur
+bindsym $mod+Shift+x exec i3lock -i ~/Pictures/1.jpg --blur 5
 
-# Focus movement
-bindsym $mod+j focus left
-bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+semicolon focus right
+# Background switcher
+bindsym $mod+b exec --no-startup-id feh --bg-scale ~/Pictures/1.jpg
+bindsym $mod+Shift+b exec --no-startup-id feh --bg-scale ~/Pictures/2.jpg
+
+# Focus movement (vim-like)
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
 bindsym $mod+Left focus left
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 # Move windows
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+semicolon move right
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
 # Split orientation
-bindsym $mod+h split h
-bindsym $mod+v split v
+bindsym $mod+backslash split h
+bindsym $mod+minus split v
 
 # Fullscreen
 bindsym $mod+f fullscreen toggle
@@ -103,17 +114,17 @@ bindsym $mod+space focus mode_toggle
 # Focus parent/child
 bindsym $mod+a focus parent
 
-# Workspace definitions
-set $ws1 "1"
-set $ws2 "2"
-set $ws3 "3"
-set $ws4 "4"
-set $ws5 "5"
-set $ws6 "6"
-set $ws7 "7"
-set $ws8 "8"
-set $ws9 "9"
-set $ws10 "10"
+# Workspace definitions with icons
+set $ws1 "1:  "
+set $ws2 "2:  "
+set $ws3 "3:  "
+set $ws4 "4:  "
+set $ws5 "5:  "
+set $ws6 "6:  "
+set $ws7 "7:  "
+set $ws8 "8:  "
+set $ws9 "9:  "
+set $ws10 "10:  "
 
 # Switch to workspace
 bindsym $mod+1 workspace number $ws1
@@ -146,10 +157,10 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit i3?' -B 'Yes' 'i3-msg e
 
 # Resize mode
 mode "resize" {
-    bindsym j resize shrink width 10 px or 10 ppt
-    bindsym k resize grow height 10 px or 10 ppt
-    bindsym l resize shrink height 10 px or 10 ppt
-    bindsym semicolon resize grow width 10 px or 10 ppt
+    bindsym h resize shrink width 10 px or 10 ppt
+    bindsym j resize grow height 10 px or 10 ppt
+    bindsym k resize shrink height 10 px or 10 ppt
+    bindsym l resize grow width 10 px or 10 ppt
 
     bindsym Left resize shrink width 10 px or 10 ppt
     bindsym Down resize grow height 10 px or 10 ppt
@@ -164,19 +175,28 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # Window rules
-for_window [class="Pavucontrol"] floating enable
-for_window [class="Arandr"] floating enable
-for_window [class="Lxappearance"] floating enable
+for_window [class="Pavucontrol"] floating enable, resize set 600 400, move position center
+for_window [class="Arandr"] floating enable, resize set 800 600, move position center
+for_window [class="Lxappearance"] floating enable, resize set 600 400, move position center
+for_window [class="Thunar"] floating enable, resize set 800 600, move position center
 for_window [window_role="pop-up"] floating enable
 for_window [window_role="task_dialog"] floating enable
+for_window [class="mpv"] floating enable, resize set 800 600, move position center
+for_window [class="feh"] floating enable, resize set 800 600, move position center
+
+# Scratchpad
+# bindsym $mod+Shift+minus move scratchpad
+# bindsym $mod+minus scratchpad show
 
 # Status bar
 bar {
     status_command i3status -c ~/.config/i3status/config
     position top
-    height 30
+    height 32
     workspace_buttons yes
-    workspace_min_width 40
+    workspace_min_width 50
+    separator_symbol "  "
+    strip_workspace_numbers yes
     
     colors {
         background $bg-color
@@ -186,9 +206,8 @@ bar {
         #                  border             background         text
         focused_workspace  $accent-color      $accent-color      $bg-color
         inactive_workspace $inactive-bg-color $inactive-bg-color $inactive-text-color
-        active_workspace   $inactive-bg-color $inactive-bg-color $text-color
+        active_workspace   $border-color      $border-color      $text-color
         urgent_workspace   $urgent-bg-color   $urgent-bg-color   $text-color
+        binding_mode       $warning-color     $warning-color     $bg-color
     }
 }
-
-exec_always --no-startup-id setxkbmap -layout "us,ir" -option "grp:alt_shift_toggle"

@@ -1,182 +1,213 @@
 /*
- * Rofi Dark Theme Configuration
- * Minimal and beautiful launcher theme
+ * Rofi Modern Dark Theme
+ * Clean, minimal, and beautiful
  */
 
 configuration {
-    display-drun: "Applications";
-    display-run: "Run";
-    display-window: "Windows";
+    display-drun: "  Applications";
+    display-run: "  Run";
+    display-window: "  Windows";
+    display-filebrowser: "  Files";
     show-icons: true;
     icon-theme: "Papirus-Dark";
-    font: "JetBrains Mono 12";
-    modi: "drun,run,window";
-    kb-row-up: "Up,Control+k";
-    kb-row-down: "Down,Control+j";
+    font: "JetBrains Mono Medium 11";
+    modi: "drun,run,window,filebrowser";
     kb-accept-entry: "Control+m,Return,KP_Enter";
     kb-remove-to-eol: "Control+Shift+e";
     kb-mode-next: "Shift+Right,Control+Tab";
     kb-mode-previous: "Shift+Left,Control+Shift+Tab";
     kb-row-left: "Control+Page_Up";
     kb-row-right: "Control+Page_Down";
+    kb-row-select: "Control+space";
+    kb-screenshot: "Alt+Shift+S";
+    kb-ellipsize: "Alt+period";
+    terminal: "alacritty";
+    run-shell-command: "{terminal} -e {cmd}";
 }
 
 * {
-    background-color: #2f343f;
-    text-color: #f3f4f5;
-    selbg: #4a9eff;
-    actbg: #262626;
-    urgbg: #e53e3e;
-    winbg: #2f343f;
-
-    selected-normal-foreground: #2f343f;
-    selected-normal-background: #4a9eff;
-    selected-active-foreground: #2f343f;
-    selected-active-background: #4a9eff;
-    selected-urgent-foreground: #2f343f;
-    selected-urgent-background: #e53e3e;
-
-    normal-foreground: #f3f4f5;
-    normal-background: #2f343f;
-    active-foreground: #4a9eff;
-    active-background: #2f343f;
-    urgent-foreground: #e53e3e;
-    urgent-background: #2f343f;
-
-    alternate-normal-foreground: #f3f4f5;
-    alternate-normal-background: #2f343f;
-    alternate-active-foreground: #4a9eff;
-    alternate-active-background: #2f343f;
-    alternate-urgent-foreground: #e53e3e;
-    alternate-urgent-background: #2f343f;
-
-    border-color: #4a9eff;
-    spacing: 2;
+    background-color: transparent;
+    text-color: #c0caf5;
+    font: "JetBrains Mono Medium 11";
 }
 
 window {
-    background-color: #2f343f;
-    border: 1;
-    border-radius: 6;
-    border-color: #4a9eff;
-    padding: 15;
-    width: 45%;
+    background-color: #1a1b26ee;
+    border: 1px;
+    border-color: #3b4261;
+    border-radius: 12px;
+    width: 28%;
     location: center;
     anchor: center;
+    x-offset: 0;
+    y-offset: 0;
 }
 
-mainbox {
-    border: 0;
-    padding: 0;
+prompt {
+    enabled: true;
+    padding: 8px 12px;
+    background-color: #7aa2f7;
+    text-color: #1a1b26;
+    border-radius: 6px;
+    margin: 0px 8px 0px 0px;
 }
 
-message {
-    border: 2px 0 0;
-    border-color: #4a9eff;
-    padding: 1px;
+textbox-prompt-colon {
+    expand: false;
+    str: "";
+    background-color: transparent;
+    text-color: inherit;
+    padding: 8px 4px;
 }
 
-textbox {
-    highlight: #4a9eff;
-    text-color: #f3f4f5;
-}
-
-listview {
-    border: 2px solid 0 0;
-    padding: 2px 0 0;
-    border-color: #4a9eff;
-    spacing: 2px;
-    scrollbar: false;
-    fixed-height: 0;
-}
-
-element {
-    border: 0;
-    padding: 8px;
-    border-radius: 4;
-}
-
-element.normal.normal {
-    background-color: #2f343f;
-    text-color: #f3f4f5;
-}
-
-element.normal.urgent {
-    background-color: #2f343f;
-    text-color: #e53e3e;
-}
-
-element.normal.active {
-    background-color: #2f343f;
-    text-color: #4a9eff;
-}
-
-element.selected.normal {
-    background-color: #4a9eff;
-    text-color: #2f343f;
-}
-
-element.selected.urgent {
-    background-color: #e53e3e;
-    text-color: #2f343f;
-}
-
-element.selected.active {
-    background-color: #4a9eff;
-    text-color: #2f343f;
-}
-
-element.alternate.normal {
-    background-color: #2f343f;
-    text-color: #f3f4f5;
-}
-
-element.alternate.urgent {
-    background-color: #2f343f;
-    text-color: #e53e3e;
-}
-
-element.alternate.active {
-    background-color: #2f343f;
-    text-color: #4a9eff;
-}
-
-scrollbar {
-    width: 4px;
-    border: 0;
-    handle-color: #4a9eff;
-    handle-width: 8px;
-    padding: 0;
-}
-
-sidebar {
-    border: 2px 0 0;
-    border-color: #4a9eff;
+entry {
+    padding: 8px 12px;
+    background-color: #16161e;
+    text-color: #c0caf5;
+    border-radius: 6px;
+    border: 1px;
+    border-color: #3b4261;
 }
 
 inputbar {
-    spacing: 0;
-    text-color: #f3f4f5;
-    padding: 2px;
-    children: [ prompt, textbox-prompt-sep, entry, case-indicator ];
-}
-
-case-indicator,
-entry,
-prompt,
-button {
-    spacing: 0;
-    text-color: #f3f4f5;
-}
-
-button.selected {
-    background-color: #4a9eff;
-    text-color: #2f343f;
-}
-
-textbox-prompt-sep {
+    children: [ prompt, entry ];
+    background-color: transparent;
+    text-color: #c0caf5;
     expand: false;
-    str: ":";
-    text-color: #f3f4f5;
-    margin: 0 0.3em 0 0;
+    border-radius: 6px;
+    margin: 0px 0px 20px 0px;
+    padding: 0px;
+    position: center;
+}
+
+listview {
+    background-color: transparent;
+    columns: 1;
+    lines: 8;
+    cycle: true;
+    dynamic: true;
+    scrollbar: false;
+    layout: vertical;
+    reverse: false;
+    fixed-height: true;
+    fixed-columns: true;
+    spacing: 4px;
+    margin: 0px 0px 0px 0px;
+    border: 0px;
+}
+
+element {
+    background-color: transparent;
+    text-color: #c0caf5;
+    orientation: horizontal;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin: 0px 0px 0px 0px;
+    border: 1px;
+    border-color: transparent;
+}
+
+element-icon {
+    background-color: transparent;
+    text-color: inherit;
+    size: 20px;
+    margin: 0px 12px 0px 0px;
+}
+
+element-text {
+    background-color: transparent;
+    text-color: inherit;
+    expand: true;
+    horizontal-align: 0;
+    vertical-align: 0.5;
+    margin: 0px 0px 0px 0px;
+}
+
+element normal.normal {
+    background-color: transparent;
+    text-color: #c0caf5;
+    border-color: transparent;
+}
+
+element normal.urgent {
+    background-color: transparent;
+    text-color: #f7768e;
+    border-color: transparent;
+}
+
+element normal.active {
+    background-color: transparent;
+    text-color: #7aa2f7;
+    border-color: transparent;
+}
+
+element selected.normal {
+    background-color: #7aa2f722;
+    text-color: #7aa2f7;
+    border-color: #7aa2f7;
+}
+
+element selected.urgent {
+    background-color: #f7768e22;
+    text-color: #f7768e;
+    border-color: #f7768e;
+}
+
+element selected.active {
+    background-color: #9ece6a22;
+    text-color: #9ece6a;
+    border-color: #9ece6a;
+}
+
+element alternate.normal {
+    background-color: transparent;
+    text-color: #c0caf5;
+    border-color: transparent;
+}
+
+element alternate.urgent {
+    background-color: transparent;
+    text-color: #f7768e;
+    border-color: transparent;
+}
+
+element alternate.active {
+    background-color: transparent;
+    text-color: #7aa2f7;
+    border-color: transparent;
+}
+
+mainbox {
+    background-color: transparent;
+    border: 0px;
+    border-radius: 0px;
+    border-color: transparent;
+    children: [ inputbar, listview ];
+    spacing: 0px;
+    padding: 20px;
+}
+
+message {
+    background-color: #16161e;
+    text-color: #c0caf5;
+    border-radius: 6px;
+    border: 1px;
+    border-color: #3b4261;
+    padding: 12px;
+    margin: 0px 0px 20px 0px;
+}
+
+textbox {
+    background-color: transparent;
+    text-color: #c0caf5;
+    vertical-align: 0.5;
+    horizontal-align: 0.0;
+    highlight: #7aa2f7;
+}
+
+error-message {
+    background-color: #f7768e;
+    text-color: #1a1b26;
+    border-radius: 6px;
+    padding: 12px;
 }
