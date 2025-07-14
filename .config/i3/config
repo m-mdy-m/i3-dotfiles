@@ -190,3 +190,5 @@ bar {
         urgent_workspace   $urgent-bg-color   $urgent-bg-color   $text-color
     }
 }
+
+exec_always --no-startup-id setxkbmap -layout "us,ir" -option "grp:alt_shift_toggle"
