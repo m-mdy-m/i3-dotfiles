@@ -40,9 +40,6 @@ exec --no-startup-id nm-applet
 exec_always --no-startup-id setxkbmap -layout us,ir -option grp:alt_shift_toggle
 exec --no-startup-id xset r rate 200 30
 
-# Background with blur effect
-# exec --no-startup-id picom --config ~/.config/picom/picom.conf
-
 # xVolume controls with notification
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && $refresh_i3status
