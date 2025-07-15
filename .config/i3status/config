@@ -83,4 +83,5 @@ battery all {
 
 tztime local {
     format = "<span color='#c0caf5'> </span> %a %d %b <span color='#7aa2f7'>%H:%M</span>"
+    timezone = "Asia/Tehran"   
 }
