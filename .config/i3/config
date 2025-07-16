@@ -4,8 +4,9 @@
 # Set modifier key to Super (Windows key)
 set $mod Mod4
 
-# Font for window titles and bar
-font pango:JetBrains Mono Medium 10
+# You must have the Vazir font installed. You can check if it is installed using:
+# fc-list | grep Vazir
+font pango:Vazir 10
 
 # Modern color palette - Dark theme with subtle accents
 set $bg-color            #1a1b26
