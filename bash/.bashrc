@@ -190,6 +190,9 @@ alias untar='tar -xvf'
 alias unbz2='tar -xvjf'
 alias ungz='tar -xvzf'
 
+# Change BG
+alias c-bg='feh --bg-fill "$(find ~/Pictures -type f \( -iname "*.jpg" -o -iname "*.png" \) | shuf -n1)"'
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # FUNCTIONS
 # ═══════════════════════════════════════════════════════════════════════════════
