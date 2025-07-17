@@ -1,68 +1,85 @@
 # i3 config file (v4)
-# Modern, Clean, Minimal Configuration
+# Enhanced Modern Dark Configuration
+# Inspired by cyberpunk aesthetics with deep blues and subtle neon accents
 
 # Set modifier key to Super (Windows key)
 set $mod Mod4
 
-# You must have the Vazir font installed. You can check if it is installed using:
-# fc-list | grep Vazir
+# Enhanced font with better readability
 font pango:Vazir 10
 
-# Modern color palette - Dark theme with subtle accents
-set $bg-color            #1a1b26
-set $inactive-bg-color   #16161e
-set $text-color          #c0caf5
-set $inactive-text-color #565f89
-set $urgent-bg-color     #f7768e
-set $accent-color        #7aa2f7
-set $border-color        #3b4261
-set $active-border       #7aa2f7
-set $warning-color       #ff9e64
+# Enhanced color palette - Deep space theme with electric accents
+set $bg-color            #0d1117
+set $inactive-bg-color   #161b22
+set $text-color          #f0f6fc
+set $inactive-text-color #7d8590
+set $urgent-bg-color     #da3633
+set $accent-color        #58a6ff
+set $secondary-accent    #bd93f9
+set $success-color       #3fb950
+set $warning-color       #d29922
+set $border-color        #21262d
+set $active-border       #58a6ff
+set $focused-bg          #0969da
+set $shadow-color        #010409
 
-# Window colors
+# Enhanced window colors with better contrast
 #                       border              background         text                 indicator
-client.focused          $active-border      $bg-color          $text-color          $accent-color
+client.focused          $active-border      $focused-bg        $text-color          $secondary-accent
 client.unfocused        $border-color       $inactive-bg-color $inactive-text-color $border-color
-client.focused_inactive $border-color       $inactive-bg-color $inactive-text-color $border-color
-client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color          $urgent-bg-color
+client.focused_inactive $border-color       $bg-color          $inactive-text-color $border-color
+client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color          $warning-color
 
-# Window styling
-for_window [class=".*"] border pixel 1
+# Enhanced window styling with modern gaps
+for_window [class=".*"] border pixel 2
 for_window [class=".*"] floating disable
 
-gaps inner 10
-gaps outer 6
+# Enhanced gaps for better spacing
+gaps inner 12
+gaps outer 8
 smart_gaps on
 smart_borders on
+
+# Enhanced border settings
+default_border pixel 2
+default_floating_border pixel 2
+hide_edge_borders smart
+
 # Autostart applications
+exec --no-startup-id ~/.config/i3/random-bg.sh
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id nm-applet
 exec_always --no-startup-id setxkbmap -layout us,ir -option grp:alt_shift_toggle
 exec --no-startup-id xset r rate 200 30
 
-# xVolume controls with notification
+# Enhanced volume controls with better feedback
 set $refresh_i3status killall -SIGUSR1 i3status
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && $refresh_i3status
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% && $refresh_i3status
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +3% && $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -3% && $refresh_i3status
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
-# Brightness controls
-bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 10
-bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 10
+# Enhanced brightness controls
+bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 8
+bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 8
 
 # Use Mouse+$mod to drag floating windows
 floating_modifier $mod
 
-# Key bindings
+# Enhanced key bindings
 bindsym $mod+Return exec alacritty
+bindsym $mod+Shift+Return exec alacritty --class floating-terminal
 bindsym $mod+Shift+q kill
-bindsym $mod+d exec rofi -show drun
-bindsym $mod+Shift+d exec rofi -show run
-bindsym $mod+Tab exec rofi -show window
+bindsym $mod+d exec rofi -show drun -theme ~/.config/rofi/config.rasi
+bindsym $mod+Shift+d exec rofi -show run -theme ~/.config/rofi/config.rasi
+bindsym $mod+Tab exec rofi -show window -theme ~/.config/rofi/config.rasi
+bindsym $mod+c exec rofi -show calc -theme ~/.config/rofi/config.rasi
 
-# Focus movement (vim-like)
+# Screenshot bindings
+bindsym Print exec --no-startup-id bash -c 'mkdir -p "$HOME/screenshot" && scrot "$HOME/screenshot/%Y-%m-%d_%H-%M-%S.png"'
+
+# Enhanced focus movement (vim-like)
 bindsym $mod+h focus left
 bindsym $mod+j focus down
 bindsym $mod+k focus up
@@ -72,7 +89,7 @@ bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
-# Move windows
+# Enhanced window movement
 bindsym $mod+Shift+h move left
 bindsym $mod+Shift+j move down
 bindsym $mod+Shift+k move up
@@ -82,11 +99,11 @@ bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-# Split orientation
+# Split orientation with better visual feedback
 bindsym $mod+backslash split h
 bindsym $mod+minus split v
 
-# Fullscreen
+# Fullscreen toggle
 bindsym $mod+f fullscreen toggle
 
 # Layout modes
@@ -101,17 +118,17 @@ bindsym $mod+space focus mode_toggle
 # Focus parent/child
 bindsym $mod+a focus parent
 
-# Workspace definitions with icons
-set $ws1 "1:  "
-set $ws2 "2:  "
-set $ws3 "3:  "
-set $ws4 "4:  "
-set $ws5 "5:  "
-set $ws6 "6:  "
-set $ws7 "7:  "
-set $ws8 "8:  "
-set $ws9 "9:  "
-set $ws10 "10:  "
+# Enhanced workspace definitions with better icons
+set $ws1 "1: "
+set $ws2 "2: "
+set $ws3 "3: "
+set $ws4 "4: "
+set $ws5 "5: "
+set $ws6 "6: "
+set $ws7 "7: "
+set $ws8 "8: "
+set $ws9 "9: "
+set $ws10 "10: "
 
 # Switch to workspace
 bindsym $mod+1 workspace number $ws1
@@ -137,12 +154,15 @@ bindsym $mod+Shift+8 move container to workspace number $ws8
 bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
-# Reload, restart, exit
+# Enhanced system controls
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit i3?' -B 'Yes' 'i3-msg exit'"
 
-# Resize mode
+# Lock screen
+bindsym $mod+Shift+x exec i3lock -c 000000
+
+# Enhanced resize mode
 mode "resize" {
     bindsym h resize shrink width 10 px or 10 ppt
     bindsym j resize grow height 10 px or 10 ppt
@@ -161,15 +181,23 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-# Status bar
+# Floating window rules
+for_window [class="floating-terminal"] floating enable, resize set 800 600, move position center
+for_window [class="Pavucontrol"] floating enable, resize set 800 600, move position center
+for_window [class="Blueman-manager"] floating enable, resize set 800 600, move position center
+for_window [class="Nm-connection-editor"] floating enable, resize set 600 400, move position center
+
+# Enhanced status bar
 bar {
     status_command i3status -c ~/.config/i3status/config
     position top
-    height 32
+    height 36
     workspace_buttons yes
-    workspace_min_width 50
+    workspace_min_width 60
     separator_symbol "  "
     strip_workspace_numbers yes
+    tray_output primary
+    tray_padding 2
     
     colors {
         background $bg-color
