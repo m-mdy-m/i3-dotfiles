@@ -1,87 +1,84 @@
 # i3status configuration file
-# Modern, clean status bar with better formatting
+# Enhanced modern status bar with cyberpunk aesthetics
 
 general {
     colors = true
     interval = 2
-    color_good = "#9ece6a"
-    color_bad = "#f7768e"
-    color_degraded = "#ff9e64"
+    color_good = "#3fb950"
+    color_bad = "#da3633"
+    color_degraded = "#d29922"
     markup = "pango"
     separator = false
 }
 
-order += "wireless _first_"
 order += "ethernet _first_"
 order += "disk /"
+order += "disk /home"
 order += "memory"
+order += "load"
 order += "cpu_usage"
 order += "cpu_temperature 0"
 order += "volume master"
-order += "battery all"
 order += "tztime local"
 
-wireless _first_ {
-    format_up = "<span color='#7aa2f7'> </span> %essid <span color='#565f89'>%quality</span>"
-    format_down = "<span color='#f7768e'> </span> Disconnected"
-}
-
 ethernet _first_ {
-    format_up = "<span color='#7aa2f7'> </span> %ip"
-    format_down = "<span color='#565f89'> </span> Down"
+    format_up = "<span color='#58a6ff' font_weight='bold'> </span><span color='#f0f6fc'>%ip</span>"
+    format_down = "<span color='#7d8590'> </span><span color='#7d8590'>Down</span>"
 }
 
 disk "/" {
-    format = "<span color='#bb9af7'> </span> %avail"
+    format = "<span color='#bd93f9' font_weight='bold'> </span><span color='#f0f6fc'>%avail</span>"
     threshold_type = "percentage_avail"
     low_threshold = 10
-    format_below_threshold = "<span color='#f7768e'> </span> %avail"
+    format_below_threshold = "<span color='#da3633' font_weight='bold'> </span><span color='#da3633'>%avail</span>"
+    prefix_type = "binary"
+}
+
+disk "/home" {
+    format = "<span color='#bd93f9' font_weight='bold'> </span><span color='#f0f6fc'>%avail</span>"
+    threshold_type = "percentage_avail"
+    low_threshold = 10
+    format_below_threshold = "<span color='#da3633' font_weight='bold'> </span><span color='#da3633'>%avail</span>"
+    prefix_type = "binary"
 }
 
 memory {
-    format = "<span color='#7dcfff'> </span> %used"
-    threshold_degraded = "1G"
-    format_degraded = "<span color='#ff9e64'> </span> %used"
+    format = "<span color='#7dcfff' font_weight='bold'> </span><span color='#f0f6fc'>%used</span><span color='#7d8590' size='small'>/%total</span>"
+    threshold_degraded = "2G"
+    threshold_critical = "1G"
+    format_degraded = "<span color='#d29922' font_weight='bold'> </span><span color='#d29922'>%used</span>"
+}
+
+load {
+    format = "<span color='#ff9e64' font_weight='bold'> </span><span color='#f0f6fc'>%1min</span>"
+    max_threshold = "4"
+    format_above_threshold = "<span color='#da3633' font_weight='bold'> </span><span color='#da3633'>%1min</span>"
 }
 
 cpu_usage {
-    format = "<span color='#9ece6a'> </span> %usage"
-    max_threshold = 75
-    format_above_threshold = "<span color='#f7768e'> </span> %usage"
-    degraded_threshold = 50
-    format_above_degraded_threshold = "<span color='#ff9e64'> </span> %usage"
+    format = "<span color='#3fb950' font_weight='bold'> </span><span color='#f0f6fc'>%usage</span>"
+    max_threshold = 80
+    format_above_threshold = "<span color='#da3633' font_weight='bold'> </span><span color='#da3633'>%usage</span>"
+    degraded_threshold = 60
+    format_above_degraded_threshold = "<span color='#d29922' font_weight='bold'> </span><span color='#d29922'>%usage</span>"
 }
 
 cpu_temperature 0 {
-    format = "<span color='#ff9e64'> </span> %degrees°C"
-    max_threshold = 65
-    format_above_threshold = "<span color='#f7768e'> </span> %degrees°C"
+    format = "<span color='#ff9e64' font_weight='bold'> </span><span color='#f0f6fc'>%degrees°C</span>"
+    max_threshold = 70
+    format_above_threshold = "<span color='#da3633' font_weight='bold'> </span><span color='#da3633'>%degrees°C</span>"
     path = "/sys/class/thermal/thermal_zone0/temp"
 }
 
 volume master {
-    format = "<span color='#7aa2f7'> </span> %volume"
-    format_muted = "<span color='#565f89'> </span> Muted"
+    format = "<span color='#58a6ff' font_weight='bold'> </span><span color='#f0f6fc'>%volume</span>"
+    format_muted = "<span color='#7d8590' font_weight='bold'> </span><span color='#7d8590'>Muted</span>"
     device = "default"
     mixer = "Master"
     mixer_idx = 0
 }
 
-battery all {
-    format = "%status %percentage <span color='#565f89'>%remaining</span>"
-    format_down = "<span color='#565f89'> </span> No Battery"
-    status_chr = "<span color='#9ece6a'> </span>"
-    status_bat = "<span color='#7aa2f7'> </span>"
-    status_unk = "<span color='#ff9e64'> </span>"
-    status_full = "<span color='#9ece6a'> </span>"
-    path = "/sys/class/power_supply/BAT%d/uevent"
-    low_threshold = 20
-    threshold_type = "percentage"
-    hide_seconds = true
-    integer_battery_capacity = true
-}
-
 tztime local {
-    format = "<span color='#c0caf5'> </span> %a %d %b <span color='#7aa2f7'>%H:%M</span>"
+    format = "<span color='#f0f6fc' font_weight='bold'> </span><span color='#f0f6fc'>%a %d %b</span> <span color='#58a6ff' font_weight='bold'>%H:%M</span>"
     timezone = "Asia/Tehran"   
 }
