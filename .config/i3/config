@@ -1,51 +1,59 @@
-# i3 config file (v4)
-# Enhanced Modern Dark Configuration
-# Inspired by cyberpunk aesthetics with deep blues and subtle neon accents
+# ═══════════════════════════════════════════════════════════════════════════════
+# CORE SETTINGS
+# ═══════════════════════════════════════════════════════════════════════════════
 
-# Set modifier key to Super (Windows key)
 set $mod Mod4
+font pango:JetBrains Mono Medium 9
 
-# Enhanced font with better readability
-font pango:Vazir 10
+# ═══════════════════════════════════════════════════════════════════════════════
+# MINIMAL DARK THEM
+# ═══════════════════════════════════════════════════════════════════════════════
 
-# Enhanced color palette - Deep space theme with electric accents
-set $bg-color            #0d1117
-set $inactive-bg-color   #161b22
-set $text-color          #f0f6fc
-set $inactive-text-color #7d8590
-set $urgent-bg-color     #da3633
-set $accent-color        #58a6ff
-set $secondary-accent    #bd93f9
-set $success-color       #3fb950
-set $warning-color       #d29922
-set $border-color        #21262d
-set $active-border       #58a6ff
-set $focused-bg          #0969da
-set $shadow-color        #010409
+set $bg-dark            #0a0a0a
+set $bg-darker          #050505
+set $bg-light           #141414
+set $text-white         #e8e8e8
+set $text-gray          #6e6e6e
+set $text-dim           #4a4a4a
+set $accent-primary     #7aa2f7
+set $accent-secondary   #2ac3de
+set $accent-success     #73daca
+set $accent-warning     #e0af68
+set $accent-error       #f7768e
 
-# Enhanced window colors with better contrast
-#                       border              background         text                 indicator
-client.focused          $active-border      $focused-bg        $text-color          $secondary-accent
-client.unfocused        $border-color       $inactive-bg-color $inactive-text-color $border-color
-client.focused_inactive $border-color       $bg-color          $inactive-text-color $border-color
-client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color          $warning-color
+set $border-focused     #7aa2f7
+set $border-inactive    #1a1a1a
+set $border-urgent      #f7768e
 
-# Enhanced window styling with modern gaps
-for_window [class=".*"] border pixel 2
-for_window [class=".*"] floating disable
+# ═══════════════════════════════════════════════════════════════════════════════
+# WINDOW STYLING
+# ═══════════════════════════════════════════════════════════════════════════════
 
-# Enhanced gaps for better spacing
-gaps inner 12
-gaps outer 8
+#                       border              background      text            indicator
+client.focused          $border-focused     $bg-light       $text-white     $accent-secondary
+client.focused_inactive $border-inactive    $bg-dark        $text-gray      $border-inactive
+client.unfocused        $border-inactive    $bg-darker      $text-dim       $border-inactive
+client.urgent           $border-urgent      $accent-error   $text-white     $accent-warning
+
+# Window borders
+default_border pixel 1
+default_floating_border pixel 1
+for_window [class=".*"] border pixel 1
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# GAPS & SPACIN
+# ═══════════════════════════════════════════════════════════════════════════════
+
+gaps inner 8
+gaps outer 4
 smart_gaps on
 smart_borders on
-
-# Enhanced border settings
-default_border pixel 2
-default_floating_border pixel 2
 hide_edge_borders smart
 
-# Autostart applications
+# ═══════════════════════════════════════════════════════════════════════════════
+# AUTOSTART
+# ═══════════════════════════════════════════════════════════════════════════════
+
 exec --no-startup-id ~/.config/i3/random-bg.sh
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
@@ -53,33 +61,39 @@ exec --no-startup-id nm-applet
 exec_always --no-startup-id setxkbmap -layout us,ir -option grp:alt_shift_toggle
 exec --no-startup-id xset r rate 200 30
 
-# Enhanced volume controls with better feedback
+# ═══════════════════════════════════════════════════════════════════════════════
+# MEDIA CONTROLS
+# ═══════════════════════════════════════════════════════════════════════════════
+
 set $refresh_i3status killall -SIGUSR1 i3status
+
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +3% && $refresh_i3status
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -3% && $refresh_i3status
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
-
-# Enhanced brightness controls
 bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 8
 bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 8
 
-# Use Mouse+$mod to drag floating windows
+# ═══════════════════════════════════════════════════════════════════════════════
+# KEY BINDINGS
+# ═══════════════════════════════════════════════════════════════════════════════
+
 floating_modifier $mod
 
-# Enhanced key bindings
+# Launch applications
 bindsym $mod+Return exec alacritty
 bindsym $mod+Shift+Return exec alacritty --class floating-terminal
-bindsym $mod+Shift+q kill
 bindsym $mod+d exec rofi -show drun -theme ~/.config/rofi/config.rasi
 bindsym $mod+Shift+d exec rofi -show run -theme ~/.config/rofi/config.rasi
 bindsym $mod+Tab exec rofi -show window -theme ~/.config/rofi/config.rasi
-bindsym $mod+c exec rofi -show calc -theme ~/.config/rofi/config.rasi
 
-# Screenshot bindings
+# Window management
+bindsym $mod+Shift+q kill
+
+# Screenshots
 bindsym Print exec --no-startup-id bash -c 'mkdir -p "$HOME/screenshot" && scrot "$HOME/screenshot/%Y-%m-%d_%H-%M-%S.png"'
 
-# Enhanced focus movement (vim-like)
+# Focus movement (vim-style)
 bindsym $mod+h focus left
 bindsym $mod+j focus down
 bindsym $mod+k focus up
@@ -89,7 +103,7 @@ bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
-# Enhanced window movement
+# Move windows
 bindsym $mod+Shift+h move left
 bindsym $mod+Shift+j move down
 bindsym $mod+Shift+k move up
@@ -99,11 +113,11 @@ bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-# Split orientation with better visual feedback
+# Split orientation
 bindsym $mod+backslash split h
 bindsym $mod+minus split v
 
-# Fullscreen toggle
+# Fullscreen
 bindsym $mod+f fullscreen toggle
 
 # Layout modes
@@ -111,26 +125,29 @@ bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
-# Toggle floating
+# Floating toggle
 bindsym $mod+Shift+space floating toggle
 bindsym $mod+space focus mode_toggle
 
-# Focus parent/child
+# Focus parent
 bindsym $mod+a focus parent
 
-# Enhanced workspace definitions with better icons
-set $ws1 "1: "
-set $ws2 "2: "
-set $ws3 "3: "
-set $ws4 "4: "
-set $ws5 "5: "
-set $ws6 "6: "
-set $ws7 "7: "
-set $ws8 "8: "
-set $ws9 "9: "
-set $ws10 "10: "
+# ═══════════════════════════════════════════════════════════════════════════════
+# WORKSPACES
+# ═══════════════════════════════════════════════════════════════════════════════
 
-# Switch to workspace
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+# Switch workspace
 bindsym $mod+1 workspace number $ws1
 bindsym $mod+2 workspace number $ws2
 bindsym $mod+3 workspace number $ws3
@@ -154,15 +171,19 @@ bindsym $mod+Shift+8 move container to workspace number $ws8
 bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
-# Enhanced system controls
+# ═══════════════════════════════════════════════════════════════════════════════
+# SYSTEM CONTROLS
+# ═══════════════════════════════════════════════════════════════════════════════
+
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit i3?' -B 'Yes' 'i3-msg exit'"
-
-# Lock screen
 bindsym $mod+Shift+x exec i3lock -c 000000
 
-# Enhanced resize mode
+# ═══════════════════════════════════════════════════════════════════════════════
+# RESIZE MODE
+# ═══════════════════════════════════════════════════════════════════════════════
+
 mode "resize" {
     bindsym h resize shrink width 10 px or 10 ppt
     bindsym j resize grow height 10 px or 10 ppt
@@ -181,34 +202,45 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-# Floating window rules
-for_window [class="floating-terminal"] floating enable, resize set 800 600, move position center
+# ═══════════════════════════════════════════════════════════════════════════════
+# FLOATING RULES
+# ═══════════════════════════════════════════════════════════════════════════════
+
+for_window [class="floating-terminal"] floating enable, resize set 900 600, move position center
 for_window [class="Pavucontrol"] floating enable, resize set 800 600, move position center
-for_window [class="Blueman-manager"] floating enable, resize set 800 600, move position center
+for_window [class="Blueman-manager"] floating enable, resize set 700 500, move position center
 for_window [class="Nm-connection-editor"] floating enable, resize set 600 400, move position center
 
-# Enhanced status bar
+# ═══════════════════════════════════════════════════════════════════════════════
+# STATUS BAR
+# ═══════════════════════════════════════════════════════════════════════════════
+
 bar {
     status_command i3status -c ~/.config/i3status/config
     position top
-    height 36
+    height 28
+    
+    # Minimal settings
     workspace_buttons yes
-    workspace_min_width 60
-    separator_symbol "  "
-    strip_workspace_numbers yes
+    workspace_min_width 32
+    separator_symbol " │ "
+    strip_workspace_numbers no
     tray_output primary
-    tray_padding 2
+    tray_padding 4
+    
+    # Typography
+    font pango:JetBrains Mono Medium 9
     
     colors {
-        background $bg-color
-        statusline $text-color
-        separator $inactive-text-color
+        background $bg-dark
+        statusline $text-white
+        separator  $text-dim
         
-        #                  border             background         text
-        focused_workspace  $accent-color      $accent-color      $bg-color
-        inactive_workspace $inactive-bg-color $inactive-bg-color $inactive-text-color
-        active_workspace   $border-color      $border-color      $text-color
-        urgent_workspace   $urgent-bg-color   $urgent-bg-color   $text-color
-        binding_mode       $warning-color     $warning-color     $bg-color
+        #                  border              background          text
+        focused_workspace  $accent-primary     $accent-primary     $bg-dark
+        active_workspace   $bg-light           $bg-light           $text-white
+        inactive_workspace $bg-dark            $bg-dark            $text-gray
+        urgent_workspace   $accent-error       $accent-error       $text-white
+        binding_mode       $accent-warning     $accent-warning     $bg-dark
     }
 }
