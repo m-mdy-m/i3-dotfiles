@@ -513,16 +513,61 @@ cbg() {
 # WELCOME MESSAGE
 # ═══════════════════════════════════════════════════════════════════════════════
 
-# Display welcome message on login
 if [ -n "$PS1" ]; then
-    echo -e "\n${colors[cyan]}╭─────────────────────────────────────────────────────────────╮${colors[reset]}"
-    echo -e "${colors[cyan]}│${colors[reset]}  ${colors[green]}Welcome back, ${colors[bold]}$USER${colors[reset]}! 🚀                              ${colors[cyan]}    │${colors[reset]}"
-    echo -e "${colors[cyan]}│${colors[reset]}                                                           ${colors[cyan]}  │${colors[reset]}"
-    echo -e "${colors[cyan]}│${colors[reset]}  ${colors[gray]}System:${colors[reset]} ${colors[white]}$(uname -s)${colors[reset]} ${colors[gray]}•${colors[reset]} ${colors[white]}$(date '+%d %b %Y, %H:%M')${colors[reset]}                ${colors[cyan]}         │${colors[reset]}"
-    echo -e "${colors[cyan]}│${colors[reset]}  ${colors[gray]}Shell:${colors[reset]} ${colors[white]}$BASH_VERSION${colors[reset]}                                   ${colors[cyan]}│${colors[reset]}"
-    echo -e "${colors[cyan]}│${colors[reset]}                                                             ${colors[cyan]}│${colors[reset]}"
-    echo -e "${colors[cyan]}│${colors[reset]}  ${colors[yellow]}Happy coding! 💻${colors[reset]}                                           ${colors[cyan]}│${colors[reset]}"
-    echo -e "${colors[cyan]}╰─────────────────────────────────────────────────────────────╯${colors[reset]}\n"
+    # Get system info
+    mem_info=$(free -h 2>/dev/null | awk 'NR==2 {print $3"/"$2}')
+    cpu_load=$(uptime | awk -F'load average:' '{print $2}' | awk '{print $1}' | tr -d ',')
+    distro=$(cat /etc/os-release 2>/dev/null | grep "^NAME=" | cut -d'"' -f2 | awk '{print $1}')
+    current_time=$(date '+%H:%M')
+
+    # Git branch
+    git_branch=""
+    if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        git_branch="⎇ $(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
+    fi
+
+    # Docker count
+    docker_info=""
+    if command -v docker &> /dev/null; then
+        docker_count=$(docker ps -q 2>/dev/null | wc -l)
+        docker_info="󰡨 $docker_count"
+    fi
+
+    # Disk usage
+    disk_usage=$(df -h / 2>/dev/null | awk 'NR==2 {print $5}' | tr -d '%')
+
+    # Uptime
+    uptime_info=$(uptime -p 2>/dev/null | sed 's/up //' | sed 's/ days\?/d/' | sed 's/ hours\?/h/' | sed 's/ minutes\?/m/' | awk '{print $1$2}')
+
+    # Random dark quote
+    quotes=(
+        "Write code nobody will read. Commit anyway."
+        "Your bugs are features in an alternate universe."
+        "The best code is the one you delete."
+        "Debugging: Being a detective in a crime you committed."
+        "Code like nobody's watching. Because they're not."
+        "Your prod is someone's nightmare. Ship it."
+        "Perfect code doesn't exist. Ship the chaos."
+        "Every error is a feature in disguise."
+        "The only winning move is not to deploy on Friday."
+    )
+    random_quote="${quotes[$RANDOM % ${#quotes[@]}]}"
+
+    clear
+    echo
+    echo -e "${colors[blue]}  ╭────────────────────────────────────────────╮${colors[reset]}"
+    echo -e "${colors[blue]}  │${colors[reset]}  ${colors[green]}Welcome back, ${colors[bold]}m-mdy-m${colors[reset]} ${colors[yellow]}⚡${colors[reset]}           ${colors[blue]}│${colors[reset]}"
+    echo -e "${colors[blue]}  ╰────────────────────────────────────────────╯${colors[reset]}"
+    echo
+    echo -e "  ${colors[cyan]}●${colors[reset]} ${colors[white]}$distro${colors[reset]} ${colors[gray]}•${colors[reset]} ${colors[white]}$current_time${colors[reset]} ${colors[gray]}•${colors[reset]} ${colors[dim]}RAM $mem_info${colors[reset]} ${colors[gray]}•${colors[reset]} ${colors[dim]}Load $cpu_load${colors[reset]}"
+    echo -e "  ${colors[yellow]}●${colors[reset]} ${colors[dim]}Disk $disk_usage%${colors[reset]} ${colors[gray]}•${colors[reset]} ${colors[dim]}Uptime $uptime_info${colors[reset]}"
+
+    [ -n "$git_branch" ] && echo -e "  ${colors[green]}●${colors[reset]} ${colors[white]}$git_branch${colors[reset]}"
+    [ -n "$docker_info" ] && echo -e "  ${colors[blue]}●${colors[reset]} ${colors[white]}$docker_info${colors[reset]}"
+
+    echo
+    echo -e "  ${colors[gray]}\"${colors[reset]}${colors[dim]}$random_quote${colors[reset]}${colors[gray]}\"${colors[reset]}"
+    echo
 fi
 
 # Added by Agas installer
