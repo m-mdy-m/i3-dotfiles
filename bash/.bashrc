@@ -33,13 +33,13 @@ declare -A colors=(
     [reset]='\033[0m'
     [bold]='\033[1m'
     [dim]='\033[2m'
-    [blue]='\033[38;5;39m'
-    [green]='\033[38;5;76m'
-    [yellow]='\033[38;5;221m'
-    [red]='\033[38;5;196m'
-    [purple]='\033[38;5;141m'
-    [cyan]='\033[38;5;87m'
-    [gray]='\033[38;5;244m'
+    [blue]='\033[38;5;111m'
+    [green]='\033[38;5;108m'
+    [yellow]='\033[38;5;180m'
+    [red]='\033[38;5;204m'
+    [purple]='\033[38;5;183m'
+    [cyan]='\033[38;5;109m'
+    [gray]='\033[38;5;246m'
     [white]='\033[38;5;255m'
 )
 
@@ -48,23 +48,76 @@ declare -A colors=(
 # ═══════════════════════════════════════════════════════════════════════════════
 
 # Git prompt function
-__git_ps1_custom() {
-    local branch=$(git branch 2>/dev/null | grep '^*' | colrm 1 2)
-    if [ -n "$branch" ]; then
-        local status=""
-        # Check for uncommitted changes
-        if ! git diff --quiet 2>/dev/null; then
-            status="*"
+__git_info() {
+    # if not a git repo -> nothing
+    git rev-parse --is-inside-work-tree >/dev/null 2>&1 || return
+
+    # branch / detached detection
+    local branch
+    branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || return
+    local detached=0
+    if [[ "$branch" == "HEAD" ]]; then
+        branch="detached"
+        detached=1
+    fi
+
+    # quick flags for repo state (fast checks)
+    local staged=0 unstaged=0 untracked=0 conflicted=0
+    # staged?
+    if ! git diff --cached --quiet --ignore-submodules -- 2>/dev/null; then
+        staged=1
+    fi
+    # unstaged?
+    if ! git diff --quiet --ignore-submodules -- 2>/dev/null; then
+        unstaged=1
+    fi
+    # untracked?
+    if [ -n "$(git ls-files --others --exclude-standard 2>/dev/null)" ]; then
+        untracked=1
+    fi
+    # conflict?
+    if [ -n "$(git ls-files -u 2>/dev/null)" ]; then
+        conflicted=1
+    fi
+
+    # ahead/behind (only if upstream exists)
+    local ahead=0 behind=0 remote_status=""
+    if git rev-parse --abbrev-ref --symbolic-full-name @{u} >/dev/null 2>&1; then
+        local counts
+        counts=$(git rev-list --left-right --count @{u}...HEAD 2>/dev/null) || counts=""
+        if [[ -n "$counts" ]]; then
+            behind=$(echo "$counts" | awk '{print $1}')
+            ahead=$(echo "$counts" | awk '{print $2}')
+            [[ $ahead -gt 0 ]] && remote_status="↑${ahead}"
+            [[ $behind -gt 0 ]] && remote_status="${remote_status}${remote_status:+ }↓${behind}"
         fi
-        # Check for staged changes
-        if ! git diff --cached --quiet 2>/dev/null; then
-            status="${status}+"
-        fi
-        # Check for untracked files
-        if [ -n "$(git ls-files --others --exclude-standard 2>/dev/null)" ]; then
-            status="${status}?"
-        fi
-        echo -e " ${colors[gray]}⎇${colors[reset]}${colors[yellow]}($branch$status)${colors[reset]}"
+    fi
+
+    # pick color for branch name (do not change palette keys)
+    local branch_color="${colors[green]}"
+    if [[ $conflicted -eq 1 ]]; then
+        branch_color="${colors[red]}"
+    elif [[ $staged -eq 1 || $unstaged -eq 1 || $untracked -eq 1 ]]; then
+        branch_color="${colors[yellow]}"
+    elif [[ $detached -eq 1 ]]; then
+        branch_color="${colors[purple]}"
+    fi
+
+    # build compact status string (order: staged, unstaged, untracked, conflicted)
+    local state=""
+    [[ $staged -eq 1 ]] && state="${state}+"
+    [[ $unstaged -eq 1 ]] && state="${state}*"
+    [[ $untracked -eq 1 ]] && state="${state}?"
+    [[ $conflicted -eq 1 ]] && state="${state}!"
+
+    # assemble final piece
+    if [[ $detached -eq 1 ]]; then
+        # show short commit-ish for detached (optional: show short SHA)
+        local shortsha
+        shortsha=$(git rev-parse --short HEAD 2>/dev/null || echo "")
+        echo -e " ${colors[gray]}⎇${colors[reset]}${branch_color}(${branch}${shortsha:+:${shortsha}}${state:+" ${state}"}${remote_status:+" ${remote_status}"})${colors[reset]}"
+    else
+        echo -e " ${colors[gray]}⎇${colors[reset]}${branch_color}(${branch}${state:+ ${state}}${remote_status:+ ${remote_status}})${colors[reset]}"
     fi
 }
 
@@ -73,38 +126,19 @@ __git_ps1_custom() {
 # ═══════════════════════════════════════════════════════════════════════════════
 
 # Main prompt function
-__build_prompt() {
-    local exit_code=$?
-    local prompt=""
-    local user="${USER}"
-    local host="${HOSTNAME%%.*}"
+__prompt() {
+    local exit=$?
     local cwd="${PWD##*/}"
-    # Top line with user@host and current directory
-    prompt="${colors[cyan]}╭─${colors[reset]}"
-    prompt+="${colors[gray]}[${colors[reset]}"
-    prompt+="${colors[green]}${user}${colors[reset]}"
-    prompt+="${colors[gray]}@${colors[reset]}"
-    prompt+="${colors[blue]}${host}${colors[reset]}"
-    prompt+="${colors[gray]}]${colors[reset]}"
-    prompt+="${colors[white]}: ${colors[reset]}"
-    prompt+="${colors[purple]}${cwd}${colors[reset]}"
+    [[ "$cwd" == "$USER" ]] && cwd="~"
     
-    # Git branch info
-    prompt+="$(__git_ps1_custom)"
+    # Status indicator
+    local status="${colors[green]}▶${colors[rest]}"
+    [[ $exit -ne 0 ]] && status="${colors[red]}▶${colors[rest]}"
     
-    # Error indicator
-    if [ $exit_code -ne 0 ]; then
-        prompt+=" ${colors[red]}✗${colors[reset]}"
-    fi
-    
-    # New line with input prompt
-    prompt+="\n${colors[cyan]}╰─${colors[reset]}${colors[green]}▶${colors[reset]} "
-    
-    echo -e "$prompt"
+    echo -e "${colors[blue]}${cwd}${colors[rest]}$(__git_info) ${status} "
 }
-
 # Set the prompt
-PS1='$(__build_prompt)'
+PS1='$(__prompt)'
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # ALIASES - ESSENTIAL DEVELOPER TOOLS
@@ -115,6 +149,8 @@ alias ls='ls --color=auto'
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+alias lt='ls -lht'
+
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
@@ -160,8 +196,6 @@ alias ga='git add'
 alias gc='git commit'
 alias gcs='git commit -S -m'
 alias gp='git push'
-alias gl='git log --oneline'
-alias gd='git diff'
 alias gb='git branch'
 alias gco='git checkout'
 alias gcb='git checkout -b'
@@ -169,6 +203,9 @@ alias gm='git merge'
 alias gf='git fetch'
 alias gpull='git pull'
 alias gclone='git clone'
+alias gl='git log --oneline --graph --decorate --all -20'
+alias gd='git diff'
+alias gdc='git diff --cached'
 
 # Quick edit
 alias bashrc='$EDITOR ~/.bashrc'
@@ -419,9 +456,6 @@ alias untar='tar -xvf'
 alias unbz2='tar -xvjf'
 alias ungz='tar -xvzf'
 
-# Change BG
-alias c-bg='feh --bg-fill "$(find ~/Pictures -type f \( -iname "*.jpg" -o -iname "*.png" \) | shuf -n1)"'
-
 # ═══════════════════════════════════════════════════════════════════════════════
 # FUNCTIONS
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -429,6 +463,11 @@ alias c-bg='feh --bg-fill "$(find ~/Pictures -type f \( -iname "*.jpg" -o -iname
 # Create directory and cd into it
 mkcd() {
     mkdir -p "$1" && cd "$1"
+}
+
+# Find file by name
+f() {
+    find . -iname "*$1*" 2>/dev/null
 }
 
 # Extract various archive types
@@ -463,6 +502,13 @@ fd() {
     find . -type d -name "*$1*" 2>/dev/null
 }
 
+cd() {
+    builtin cd "$@" && l
+}
+
+cbg() {
+    feh --bg-fill "$(find ~/Pictures -type f \( -iname "*.jpg" -o -iname "*.png" \) | shuf -n1)"
+}
 # ═══════════════════════════════════════════════════════════════════════════════
 # WELCOME MESSAGE
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -478,3 +524,7 @@ if [ -n "$PS1" ]; then
     echo -e "${colors[cyan]}│${colors[reset]}  ${colors[yellow]}Happy coding! 💻${colors[reset]}                                           ${colors[cyan]}│${colors[reset]}"
     echo -e "${colors[cyan]}╰─────────────────────────────────────────────────────────────╯${colors[reset]}\n"
 fi
+
+# Added by Agas installer
+export PATH="$PATH:/home/m-mdy-m/.local/bin"
+export PATH="$HOME/.bun/bin:$PATH"
